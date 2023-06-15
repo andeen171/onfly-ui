@@ -6,3 +6,11 @@ export interface Todo {
 export interface Meta {
   totalCount: number;
 }
+
+export interface Expense {
+  id: number;
+  description: string;
+  date: string;
+  value: number;
+  user_id: number;
+}
