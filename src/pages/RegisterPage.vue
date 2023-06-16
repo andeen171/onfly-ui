@@ -41,7 +41,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { api } from 'boot/axios';
+import { useQuasar } from 'quasar';
+import { register } from 'src/api/auth';
 
 const name = ref('');
 const email = ref('');
@@ -49,19 +50,32 @@ const password = ref('');
 const passwordConfirmation = ref('');
 
 const router = useRouter();
+const $q = useQuasar();
 
 const handleSubmit = () => {
-  api
-    .post('/register', {
-      name: name.value,
-      email: email.value,
-      password: password.value,
-      password_confirmation: passwordConfirmation.value,
-    })
-    .then((res) => {
-      localStorage.setItem('token', res.data.token);
-      router.push({ name: 'home' });
+  register({
+    name: name.value,
+    email: email.value,
+    password: password.value,
+    password_confirmation: passwordConfirmation.value,
+  })
+    .then(() => {
+      $q.notify({
+        color: 'positive',
+        position: 'top',
+        message: 'Registered successfully! An email has been sent to you to verify your account.',
+        icon: 'info',
+      });
+      setTimeout(() => {
+        router.push({ name: 'home' });
+      }, 500);
     }).catch((err) => {
+      $q.notify({
+        color: 'negative',
+        position: 'top',
+        message: 'Something went wrong',
+        icon: 'error',
+      });
       console.log(err);
     });
 };

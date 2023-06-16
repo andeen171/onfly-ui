@@ -35,20 +35,35 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { api } from 'boot/axios';
 import { useRouter } from 'vue-router';
+import { login } from 'src/api/auth';
+import { useQuasar } from 'quasar';
 
 const email = ref('');
 const password = ref('');
 
 const router = useRouter();
+const $q = useQuasar();
 
 const handleSubmit = () => {
   // Send api request to login, if suceeded redirect to home page and save token to localStorage
-  api.post('/login', { email: email.value, password: password.value }).then((res) => {
-    localStorage.setItem('userToken', res.data.token);
-    router.push({ name: 'home' });
+  login({ email: email.value, password: password.value }).then(() => {
+    $q.notify({
+      color: 'positive',
+      position: 'top',
+      message: 'Logged in successfully',
+      icon: 'info',
+    });
+    setTimeout(() => {
+      router.push({ name: 'home' });
+    }, 500);
   }).catch((err) => {
+    $q.notify({
+      color: 'negative',
+      position: 'top',
+      message: 'Invalid credentials',
+      icon: 'error',
+    });
     console.log(err);
   });
 };
