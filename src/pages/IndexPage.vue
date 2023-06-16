@@ -11,7 +11,7 @@
       <q-separator></q-separator>
       <q-card-section class="q-pa-none">
         <table-component v-if="paginatedData && !loading" :paginatedData="paginatedData" :fetchData="fetchData" />
-        <table-skeleton v-else />
+        <table-skeleton :rows="rowsPerPage" v-else />
       </q-card-section>
     </q-card>
   </q-page>
@@ -28,10 +28,12 @@ import TableSkeleton from 'src/components/TableSkeleton.vue';
 
 const paginatedData = ref<ExpensePaginatedResponse | null>(null);
 const loading = ref<boolean>(false);
+const rowsPerPage = ref<number>(10);
 
 const $q = useQuasar()
 
 const fetchData = async (page = 1, limit = 10) => {
+  rowsPerPage.value = limit
   loading.value = true
   await getExpenses(page, limit)
     .then((res) => {

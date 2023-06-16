@@ -25,7 +25,7 @@
       </thead>
 
       <tbody>
-        <tr v-for="n in 5" :key="n">
+        <tr v-for="n in rows" :key="n">
           <td class="text-left">
             <q-skeleton animation="blink" type="text" width="85px" />
           </td>
@@ -49,3 +49,12 @@
     </q-markup-table>
   </div>
 </template>
+
+<script setup lang="ts">
+defineProps({
+  rows: {
+    type: Number,
+    required: true
+  }
+})
+</script>
